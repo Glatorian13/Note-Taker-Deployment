@@ -62,7 +62,7 @@ app.post("/api/notes", (req, res) => {
 });
 
 //Delete note api, buggy does not work quite yet.
-app.delete("/api/notes/id:", (req, res) => {
+app.delete("/api/notes/:id", (req, res) => {
   let id = req.params.id;
   util
     .promisify(fs.readFile)(data, "utf8")
