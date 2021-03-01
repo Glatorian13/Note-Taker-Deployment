@@ -1,37 +1,57 @@
 //Dependencies
-const express = require('express');
-const fs= require('fs');
-const path = require('path');
+const express = require("express");
+const fs = require("fs");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 //Data parsing
 app.use(express.urlencoded({ extended: true }));
+//line 12 is super useful
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, "/public/")));
 
 //Routes
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/public/index.html')));
-app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, '/public/notes.html')));
-  //default set to index
-app.get('*', (req, res) => res.sendFile(path.join(__dirname, '/public/index.html')));
+app.get("/", (req, res) =>
+  res.sendFile(path.join(__dirname, "/public/index.html"))
+);
+app.get("/notes", (req, res) =>
+  res.sendFile(path.join(__dirname, "/public/notes.html"))
+);
+//default set to index
+//app.get('*', (req, res) => res.sendFile(path.join(__dirname, '/public/index.html')));
 // above works!
 
+//shortcut for db path
+const data = path.join(__dirname, "/db/db.json");
+console.log("Read JSON file: " + data);
+
 //Display notes
-app.get('/api/notes', function(req, res) {
-    fs.readFile('../db/db.json', (err, note) => {
-        if (err) throw err;
-        dbData = JSON.parse(note);
-        res.send(dbData);
-    });
+app.get("/api/notes", (req, res) => {
+  res.sendFile(data);
+});
+
+app.get("/api/notes/:id", (req, res) => {
+  res.sendFile(data[Number(req.params.id)]);
+});
+//Save notes (POST)
+app.post("/api/notes", (req, res) => {
+
+  let userNotes = JSON.stringify(req.body);
+    console.log("Read userNotes: " + userNotes);
+  let noteId = ((JSON.stringify(data).length));
+  console.log("Read ID at: " + noteId);
+  res.end;
 });
 
 
 
+//app.post('/api/notes', (req, res) => res.sendFile(path.join(__dirname, '/db/db.json')));
+//Delete notes
+//app.delete('/api/notes:id', (req, res) => res.sendFile(path.join(__dirname, '/db/db.json')));
+
 // app.get('/api/notes', (req, res) => res.json(__dirname, '../db/db.js'));
-
-
 
 // API requests
 // app.post('/api/notes', (req, res) => {
@@ -79,8 +99,6 @@ app.get('/api/notes', function(req, res) {
 //     });
 //     res.status(204).send();
 // });
-
-
 
 //Start Server to listen
 app.listen(PORT, () => console.log(`App listening on PORT: ${PORT}`));
