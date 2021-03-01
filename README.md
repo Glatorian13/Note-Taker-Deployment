@@ -1,5 +1,7 @@
 # Note-Taker-Deployment
   https://github.com/Glatorian13/Note-Taker-Deployment
+  Heroku Deployment:
+  https://note-taker-sample.herokuapp.com/
   # Description
   Take notes online with this Heroku deployment using NodeJS, Express, and Util.
   # Table of Content
